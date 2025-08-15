@@ -1,0 +1,46 @@
+services:
+  db1:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: survey_db
+      POSTGRES_USER: survey_user
+      POSTGRES_PASSWORD: survey_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  pgadmin1:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json
+      - ./pgadmin/.pgpass:/pgpass
+    ports:
+      - "5050:80"
+    depends_on:
+      - db1
+
+  backend1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db1
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db1:5432/survey_db
+      SPRING_DATASOURCE_USERNAME: survey_user
+      SPRING_DATASOURCE_PASSWORD: survey_password
+    ports:
+      - "8080:8080"
+    command: ["java", "-jar", "/app.jar"]
+
+volumes:
+  postgres_data:
+  pgadmin_data:

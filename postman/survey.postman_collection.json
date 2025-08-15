@@ -1,0 +1,305 @@
+{
+	"info": {
+		"_postman_id": "21e8b98f-1592-4282-858a-c6178ada23f8",
+		"name": "survey",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31928904"
+	},
+	"item": [
+		{
+			"name": "Upload statuses from csv",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/schnorb/Downloads/Statuses.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/statuses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"statuses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload members from csv",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/schnorb/Downloads/Members.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/members",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"members"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload surveys from csv",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/schnorb/Downloads/Surveys.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/surveys",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"surveys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Participations from csv",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/schnorb/Downloads/Participation.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/participations",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"participations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get by survey and completed",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/members/by-survey-and-completed?surveyId=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"members",
+						"by-survey-and-completed"
+					],
+					"query": [
+						{
+							"key": "surveyId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get by not participated survey and active",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/members/by-not-participated-survey-and-active?surveyId=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"members",
+						"by-not-participated-survey-and-active"
+					],
+					"query": [
+						{
+							"key": "surveyId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get surveys by member id and completed",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/schnorb/Downloads/Surveys.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/surveys/by-member-id-and-completed?memberId=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"surveys",
+						"by-member-id-and-completed"
+					],
+					"query": [
+						{
+							"key": "memberId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get surveys by completion points and member id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/schnorb/Downloads/Surveys.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/surveys/by-member-id-completion-points?memberId=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"surveys",
+						"by-member-id-completion-points"
+					],
+					"query": [
+						{
+							"key": "memberId",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get surveys all statistic",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/home/schnorb/Downloads/Surveys.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/surveys/all-statistic",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"surveys",
+						"all-statistic"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
