@@ -4,10 +4,6 @@ import com.dynata.survayhw.dtos.MemberDto;
 import com.dynata.survayhw.dtos.ParticipationDto;
 import com.dynata.survayhw.dtos.StatusDto;
 import com.dynata.survayhw.dtos.SurveyDto;
-import com.dynata.survayhw.entities.Member;
-import com.dynata.survayhw.entities.Participation;
-import com.dynata.survayhw.entities.Status;
-import com.dynata.survayhw.entities.Survey;
 import com.dynata.survayhw.mappers.MemberMapper;
 import com.dynata.survayhw.mappers.ParticipationMapper;
 import com.dynata.survayhw.mappers.StatusMapper;
@@ -21,6 +17,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,30 +52,34 @@ public class InitFullState {
     private ParticipationMapper participationMapper;
 
     public void deleteFullDatabase() {
-        participationRepository.deleteAll();
-        surveyRepository.deleteAll();
-        statusRepository.deleteAll();
-        memberRepository.deleteAll();
+        participationRepository.deleteAll().block();
+        surveyRepository.deleteAll().block();
+        statusRepository.deleteAll().block();
+        memberRepository.deleteAll().block();
     }
 
     public void initAllCsv(boolean exceptParticipation) {
-        List<Status> statuses = readFromCsv(new File("src/test/resources/testfiles/Statuses.csv"),
-                StatusDto.class).stream().map(statusMapper::toEntity).toList();
-        statusRepository.saveAll(statuses);
+        Flux.fromIterable(readFromCsv(new File("src/test/resources/testfiles/Statuses.csv"), StatusDto.class))
+                .map(statusMapper::toEntity)
+                .flatMap(statusRepository::upsertStatus)
+                .then().block();
 
-        List<Member> memners = readFromCsv(new File("src/test/resources/testfiles/Members.csv"),
-                MemberDto.class).stream().map(memberMapper::toEntity).toList();
-        memberRepository.saveAll(memners);
+        Flux.fromIterable(readFromCsv(new File("src/test/resources/testfiles/Members.csv"), MemberDto.class))
+                .map(memberMapper::toEntity)
+                .flatMap(memberRepository::upsertMember)
+                .then().block();
 
-        List<Survey> surveys = readFromCsv(new File("src/test/resources/testfiles/Surveys.csv"),
-                SurveyDto.class).stream().map(surveyMapper::toEntity).toList();
-        surveyRepository.saveAll(surveys);
+        Flux.fromIterable(readFromCsv(new File("src/test/resources/testfiles/Surveys.csv"), SurveyDto.class))
+                .map(surveyMapper::toEntity)
+                .flatMap(surveyRepository::upsertSurvey)
+                .then().block();
 
         if (!exceptParticipation) {
-            List<Participation> participations = readFromCsv(
-                    new File("src/test/resources/testfiles/Participations.csv"),
-                    ParticipationDto.class).stream().map(participationMapper::toEntity).toList();
-            participationRepository.saveAll(participations);
+            Flux.fromIterable(readFromCsv(new File("src/test/resources/testfiles/Participations.csv"),
+                            ParticipationDto.class))
+                    .map(participationMapper::toEntity)
+                    .flatMap(participationRepository::upsertParticipation)
+                    .then().block();
         }
     }
 

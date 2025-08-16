@@ -1,7 +1,5 @@
 package com.dynata.survayhw.repositories.returns;
 
-public interface SurveyStatisticAverage {
-    Long getSurveyId();
+import java.math.BigDecimal;
 
-    Double getAverage();
-}
+public record SurveyStatisticAverage(Long survey_id, BigDecimal completed_average) {}

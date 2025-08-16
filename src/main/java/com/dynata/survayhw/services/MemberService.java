@@ -5,6 +5,7 @@ import com.dynata.survayhw.mappers.MemberMapper;
 import com.dynata.survayhw.repositories.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -21,21 +22,25 @@ public class MemberService {
         this.memberMapper = memberMapper;
     }
 
-    public List<MemberDto> saveMemberDtos(List<MemberDto> memberDtos) {
-        return memberDtos.stream()
-                .map(memberMapper::toEntity)
-                .map(memberRepository::save)
-                .map(memberMapper::toDto)
+    public Flux<MemberDto> saveMemberDtos(List<MemberDto> memberDtos) {
+        List<Long> ids = memberDtos.stream()
+                .map(MemberDto::getMemberId)
                 .toList();
+
+        return Flux.fromIterable(memberDtos)
+                .map(memberMapper::toEntity)
+                .flatMap(memberRepository::upsertMember)
+                .thenMany(memberRepository.findAllById(ids))
+                .map(memberMapper::toDto);
     }
 
-    public List<MemberDto> getBySurveyIdAndIsCompleted(Long surveyId) {
-        return memberRepository.findBySurveyIdAndIsCompleted(surveyId).stream()
-                .map(memberMapper::toDto).toList();
+    public Flux<MemberDto> getBySurveyIdAndIsCompleted(Long surveyId) {
+        return memberRepository.findBySurveyIdAndIsCompleted(surveyId)
+                .map(memberMapper::toDto);
     }
 
-    public List<MemberDto> getByNotParticipatedInSurveyAndIsActive(Long surveyId) {
-        return memberRepository.findByNotParticipatedSurveyAndIsActive(surveyId).stream()
-                .map(memberMapper::toDto).toList();
+    public Flux<MemberDto> getByNotParticipatedInSurveyAndIsActive(Long surveyId) {
+        return memberRepository.findByNotParticipatedSurveyAndIsActive(surveyId)
+                .map(memberMapper::toDto);
     }
 }

@@ -1,14 +1,15 @@
 package com.dynata.survayhw.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
+@Table(name = "survey")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -16,18 +17,17 @@ import lombok.Setter;
 public class Survey {
 
     @Id
-    @Column(name = "survey_id", nullable = false, unique = true)
+    @Column("survey_id")
     private Long surveyId;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(name = "expected_completes", nullable = false)
+    @Column("expected_completes")
     private Integer expectedCompletes;
 
-    @Column(name = "completion_points", nullable = false)
+    @Column("completion_points")
     private Integer completionPoints;
 
-    @Column(name = "filtered_points", nullable = false)
+    @Column("filtered_points")
     private Integer filteredPoints;
 }

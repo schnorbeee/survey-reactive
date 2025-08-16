@@ -7,6 +7,7 @@ services:
       POSTGRES_USER: survey_user
       POSTGRES_PASSWORD: survey_password
     volumes:
+      - ./src/main/resources/:/docker-entrypoint-initdb.d
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
@@ -34,12 +35,13 @@ services:
     depends_on:
       - db1
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db1:5432/survey_db
-      SPRING_DATASOURCE_USERNAME: survey_user
-      SPRING_DATASOURCE_PASSWORD: survey_password
+      SPRING_R2DBC_URL: r2dbc:postgresql://db1:5432/survey_db
+      SPRING_R2DBC_USERNAME: survey_user
+      SPRING_R2DBC_PASSWORD: survey_password
+      SPRING_PROFILES_ACTIVE: docker
     ports:
       - "8080:8080"
-    command: ["java", "-jar", "/app.jar"]
+    command: [ "java", "-jar", "/app.jar" ]
 
 volumes:
   postgres_data:

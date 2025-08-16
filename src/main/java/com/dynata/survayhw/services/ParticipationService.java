@@ -5,6 +5,7 @@ import com.dynata.survayhw.mappers.ParticipationMapper;
 import com.dynata.survayhw.repositories.ParticipationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -22,13 +23,11 @@ public class ParticipationService {
         this.participationMapper = participationMapper;
     }
 
-    public List<ParticipationDto> saveParticipationDtos(List<ParticipationDto> participationDtos) {
-        return participationDtos.stream()
+    public Flux<ParticipationDto> saveParticipationDtos(List<ParticipationDto> participationDtos) {
+        return Flux.fromIterable(participationDtos)
                 .map(participationMapper::toEntity)
-                .peek(participation -> participationRepository
-                        .upsertParticipation(participation.getMemberId(), participation.getSurveyId(),
-                                participation.getStatusId(), participation.getLength()))
-                .map(participationMapper::toDto)
-                .toList();
+                .flatMap(participationRepository::upsertParticipation)
+                .thenMany(participationRepository.findAll())
+                .map(participationMapper::toDto);
     }
 }

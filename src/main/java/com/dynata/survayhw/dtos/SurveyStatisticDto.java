@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -23,5 +25,5 @@ public class SurveyStatisticDto {
 
     private Long numberOfRejectedParticipants;
 
-    private Double averageLengthOfTimeSpentOnSurvey;
+    private BigDecimal averageLengthOfTimeSpentOnSurvey;
 }

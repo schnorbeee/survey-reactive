@@ -1,14 +1,14 @@
 package com.dynata.survayhw.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
+@Table(name = "member")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -16,15 +16,15 @@ import lombok.Setter;
 public class Member {
 
     @Id
-    @Column(name = "member_id", nullable = false, unique = true)
+    @Column("member_id")
     private Long memberId;
 
-    @Column(name = "full_name", nullable = false)
+    @Column("full_name")
     private String fullName;
 
-    @Column(name = "email_address", nullable = false)
+    @Column("email_address")
     private String emailAddress;
 
-    @Column(name = "is_active", nullable = false)
+    @Column("is_active")
     private Boolean isActive;
 }

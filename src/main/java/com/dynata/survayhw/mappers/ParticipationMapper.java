@@ -11,8 +11,5 @@ public interface ParticipationMapper {
     ParticipationDto toDto(Participation entity);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "member", ignore = true)
-    @Mapping(target = "survey", ignore = true)
-    @Mapping(target = "status", ignore = true)
     Participation toEntity(ParticipationDto dto);
 }

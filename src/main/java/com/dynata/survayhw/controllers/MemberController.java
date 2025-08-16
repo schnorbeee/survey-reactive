@@ -5,15 +5,14 @@ import com.dynata.survayhw.services.CsvService;
 import com.dynata.survayhw.services.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/api/members")
@@ -30,19 +29,19 @@ public class MemberController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MemberDto>> uploadMembersCsv(@RequestParam("file") MultipartFile file) {
-        List<MemberDto> memberDtos = csvService.readFromCsv(file, MemberDto.class);
-        return ResponseEntity.ok(memberService.saveMemberDtos(memberDtos));
+    public Flux<MemberDto> uploadMembersCsv(@RequestPart("file") FilePart filePart) {
+        return csvService.readFromCsv(filePart, MemberDto.class)
+                .flatMapMany(memberService::saveMemberDtos);
     }
 
     @GetMapping(path = "/by-survey-and-completed", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MemberDto>> getBySurveyIdAndIsCompleted(@RequestParam("surveyId") Long surveyId) {
-        return ResponseEntity.ok(memberService.getBySurveyIdAndIsCompleted(surveyId));
+    public Flux<MemberDto> getBySurveyIdAndIsCompleted(@RequestParam("surveyId") Long surveyId) {
+        return memberService.getBySurveyIdAndIsCompleted(surveyId);
     }
 
     @GetMapping(path = "/by-not-participated-survey-and-active", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<MemberDto>> getByNotParticipatedInSurveyAndIsActive(
+    public Flux<MemberDto> getByNotParticipatedInSurveyAndIsActive(
             @RequestParam("surveyId") Long surveyId) {
-        return ResponseEntity.ok(memberService.getByNotParticipatedInSurveyAndIsActive(surveyId));
+        return memberService.getByNotParticipatedInSurveyAndIsActive(surveyId);
     }
 }

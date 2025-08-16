@@ -1,14 +1,14 @@
 package com.dynata.survayhw.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
+@Table(name = "status")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -16,9 +16,8 @@ import lombok.Setter;
 public class Status {
 
     @Id
-    @Column(name = "status_id", nullable = false, unique = true)
-    private Integer statusId;
+    @Column("status_id")
+    private Long statusId;
 
-    @Column(nullable = false)
     private String name;
 }

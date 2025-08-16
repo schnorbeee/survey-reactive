@@ -5,13 +5,12 @@ import com.dynata.survayhw.services.CsvService;
 import com.dynata.survayhw.services.ParticipationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/api/participations")
@@ -28,8 +27,8 @@ public class ParticipationController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ParticipationDto> uploadParticipationsCsv(@RequestParam("file") MultipartFile file) {
-        List<ParticipationDto> participationDtos = csvService.readFromCsv(file, ParticipationDto.class);
-        return participationService.saveParticipationDtos(participationDtos);
+    public Flux<ParticipationDto> uploadParticipationsCsv(@RequestPart("file") FilePart filePart) {
+        return csvService.readFromCsv(filePart, ParticipationDto.class)
+                .flatMapMany(participationService::saveParticipationDtos);
     }
 }

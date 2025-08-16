@@ -1,7 +1,3 @@
 package com.dynata.survayhw.repositories.returns;
 
-public interface SurveyStatisticCount {
-    Long getSurveyId();
-
-    Long getCount();
-}
+public record SurveyStatisticCount(Long survey_id, Long member_count) {}

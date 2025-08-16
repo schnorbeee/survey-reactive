@@ -2,17 +2,22 @@ package com.dynata.survayhw.services;
 
 import com.dynata.survayhw.dtos.SurveyDto;
 import com.dynata.survayhw.dtos.SurveyStatisticDto;
+import com.dynata.survayhw.entities.Survey;
 import com.dynata.survayhw.mappers.SurveyMapper;
 import com.dynata.survayhw.repositories.ParticipationRepository;
 import com.dynata.survayhw.repositories.SurveyRepository;
+import com.dynata.survayhw.repositories.returns.SurveyStatisticAverage;
+import com.dynata.survayhw.repositories.returns.SurveyStatisticCount;
+import com.dynata.survayhw.repositories.returns.SurveyStatisticName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Service
 public class SurveyService {
@@ -36,68 +41,72 @@ public class SurveyService {
         this.surveyMapper = surveyMapper;
     }
 
-    public List<SurveyDto> saveSurveyDtos(List<SurveyDto> surveyDtos) {
-        return surveyDtos.stream()
-                .map(surveyMapper::toEntity)
-                .map(surveyRepository::save)
-                .map(surveyMapper::toDto)
+    public Flux<SurveyDto> saveSurveyDtos(List<SurveyDto> surveyDtos) {
+        List<Long> ids = surveyDtos.stream()
+                .map(SurveyDto::getSurveyId)
                 .toList();
+
+        return Flux.fromIterable(surveyDtos)
+                .map(surveyMapper::toEntity)
+                .flatMap(surveyRepository::upsertSurvey)
+                .thenMany(surveyRepository.findAllById(ids))
+                .map(surveyMapper::toDto);
     }
 
-    public List<SurveyDto> getByMemberIdAndIsCompleted(Long memberId) {
-        return surveyRepository.findByMemberIdAndIsCompleted(memberId).stream()
-                .map(surveyMapper::toDto).toList();
+    public Flux<SurveyDto> getByMemberIdAndIsCompleted(Long memberId) {
+        return surveyRepository.findByMemberIdAndIsCompleted(memberId)
+                .map(surveyMapper::toDto);
     }
 
-    public Map<String, Integer> getSurveyCompletionPointsByMemberId(Long memberId) {
-        Map<String, Integer> surveyCompletionPoints = new HashMap<>();
-        surveyRepository.findCompletionPointsByMemberId(memberId)
-                .forEach(survey -> surveyCompletionPoints.put(survey.getName(), survey.getCompletionPoints()));
-        return surveyCompletionPoints;
+    public Mono<Map<String, Integer>> getSurveyCompletionPointsByMemberId(Long memberId) {
+        return surveyRepository.findCompletionPointsByMemberId(memberId)
+                .collectMap(Survey::getName, Survey::getCompletionPoints);
     }
 
-    public List<SurveyStatisticDto> getAllStatisticSurveys() {
-        Map<Long, Long> rejectedMemberCount = getCountedMaps(REJECTED_STATUS_ID);
-        Map<Long, Long> filteredMemberCount = getCountedMaps(FILTERED_STATUS_ID);
-        Map<Long, Long> completedMemberCount = getCountedMaps(COMPLETED_STATUS_ID);
-        Map<Long, Double> completedAverageLength = getCompletedAverageMaps();
-        Map<Long, String> surveyIdsWithNames = getAllSurveyIdWithNames();
+    public Flux<SurveyStatisticDto> getAllStatisticSurveys() {
+        Mono<Map<Long, Long>> rejectedMemberCountMono = getCountedMaps(REJECTED_STATUS_ID);
+        Mono<Map<Long, Long>> filteredMemberCountMono = getCountedMaps(FILTERED_STATUS_ID);
+        Mono<Map<Long, Long>> completedMemberCountMono = getCountedMaps(COMPLETED_STATUS_ID);
+        Mono<Map<Long, BigDecimal>> completedAverageLengthMono = getCompletedAverageMaps();
+        Mono<Map<Long, String>> surveyIdsWithNamesMono = getAllSurveyIdWithNames();
 
-        List<SurveyStatisticDto> surveyStatisticList = new ArrayList<>();
-        for (Map.Entry<Long, String> survey : surveyIdsWithNames.entrySet()) {
-            surveyStatisticList.add(SurveyStatisticDto.builder()
-                    .surveyId(survey.getKey())
-                    .surveyName(survey.getValue())
-                    .numberOfCompletes(Objects.nonNull(completedMemberCount.get(survey.getKey()))
-                            ? completedMemberCount.get(survey.getKey()) : 0)
-                    .numberOfFilteredParticipants(Objects.nonNull(filteredMemberCount.get(survey.getKey()))
-                            ? filteredMemberCount.get(survey.getKey()) : 0)
-                    .numberOfRejectedParticipants(Objects.nonNull(rejectedMemberCount.get(survey.getKey()))
-                            ? rejectedMemberCount.get(survey.getKey()) : 0)
-                    .averageLengthOfTimeSpentOnSurvey(completedAverageLength.get(survey.getKey()))
-                    .build());
-        }
-        return surveyStatisticList;
+        return Mono.zip(rejectedMemberCountMono, filteredMemberCountMono, completedMemberCountMono,
+                        completedAverageLengthMono, surveyIdsWithNamesMono)
+                .flatMapMany(tuple -> {
+                    Map<Long, Long> rejectedMemberCount = tuple.getT1();
+                    Map<Long, Long> filteredMemberCount = tuple.getT2();
+                    Map<Long, Long> completedMemberCount = tuple.getT3();
+                    Map<Long, BigDecimal> completedAverageLength = tuple.getT4();
+                    Map<Long, String> surveyIdsWithNames = tuple.getT5();
+
+                    // Vegyük a kulcsokat, majd alakítsuk át SurveyStatisticDto-vá
+                    return Flux.fromIterable(surveyIdsWithNames.entrySet())
+                            .sort(Comparator.comparingLong(Map.Entry::getKey))
+                            .map(survey -> SurveyStatisticDto.builder()
+                                    .surveyId(survey.getKey())
+                                    .surveyName(survey.getValue())
+                                    .numberOfCompletes(completedMemberCount.getOrDefault(survey.getKey(), 0L))
+                                    .numberOfFilteredParticipants(filteredMemberCount.getOrDefault(survey.getKey(), 0L))
+                                    .numberOfRejectedParticipants(rejectedMemberCount.getOrDefault(survey.getKey(), 0L))
+                                    .averageLengthOfTimeSpentOnSurvey(
+                                            completedAverageLength.getOrDefault(survey.getKey(), BigDecimal.ZERO))
+                                    .build()
+                            );
+                });
     }
 
-    private Map<Long, Long> getCountedMaps(Long statusId) {
-        Map<Long, Long> countedMap = new HashMap<>();
-        participationRepository.findStatisticCountsByStatus(statusId).forEach(count ->
-                countedMap.put(count.getSurveyId(), count.getCount()));
-        return countedMap;
+    private Mono<Map<Long, Long>> getCountedMaps(Long statusId) {
+        return participationRepository.findStatisticCountsByStatus(statusId)
+                .collectMap(SurveyStatisticCount::survey_id, SurveyStatisticCount::member_count);
     }
 
-    private Map<Long, Double> getCompletedAverageMaps() {
-        Map<Long, Double> averageMap = new HashMap<>();
-        participationRepository.findStatisticLengthByStatus().forEach(average ->
-                averageMap.put(average.getSurveyId(), average.getAverage()));
-        return averageMap;
+    private Mono<Map<Long, BigDecimal>> getCompletedAverageMaps() {
+        return participationRepository.findStatisticLengthByStatus()
+                .collectMap(SurveyStatisticAverage::survey_id, SurveyStatisticAverage::completed_average);
     }
 
-    private Map<Long, String> getAllSurveyIdWithNames() {
-        Map<Long, String> allSurveyIdWithNames = new HashMap<>();
-        surveyRepository.findAllSurveyIdsWithNames().forEach(name ->
-                allSurveyIdWithNames.put(name.getSurveyId(), name.getName()));
-        return allSurveyIdWithNames;
+    private Mono<Map<Long, String>> getAllSurveyIdWithNames() {
+        return surveyRepository.findAllSurveyIdsWithNames()
+                .collectMap(SurveyStatisticName::survey_id, SurveyStatisticName::survey_name);
     }
 }

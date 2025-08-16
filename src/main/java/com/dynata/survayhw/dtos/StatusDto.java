@@ -13,7 +13,7 @@ import lombok.Setter;
 public class StatusDto {
 
     @JsonProperty("Status Id")
-    private Integer statusId;
+    private Long statusId;
 
     @JsonProperty("Name")
     private String name;

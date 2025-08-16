@@ -5,6 +5,7 @@ import com.dynata.survayhw.mappers.StatusMapper;
 import com.dynata.survayhw.repositories.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -22,11 +23,15 @@ public class StatusService {
         this.statusMapper = statusMapper;
     }
 
-    public List<StatusDto> saveStatusDtos(List<StatusDto> statusDtos) {
-        return statusDtos.stream()
-                .map(statusMapper::toEntity)
-                .map(statusRepository::save)
-                .map(statusMapper::toDto)
+    public Flux<StatusDto> saveStatusDtos(List<StatusDto> statusDtos) {
+        List<Long> ids = statusDtos.stream()
+                .map(StatusDto::getStatusId)
                 .toList();
+
+        return Flux.fromIterable(statusDtos)
+                .map(statusMapper::toEntity)
+                .flatMap(statusRepository::upsertStatus)
+                .thenMany(statusRepository.findAllById(ids))
+                .map(statusMapper::toDto);
     }
 }
