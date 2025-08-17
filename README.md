@@ -58,4 +58,11 @@ password "survey_password".
 
 http://localhost:5051/
 
+If you want to test performance POST and GET endpoint, then you can run wrk command into the root folder with terminal
+like this:
+
+`wrk -t5 -c100 -d30s -s async_requests_GET.lua http://localhost:8081`
+
+`wrk -t5 -c100 -d30s -s async_requests_POST.lua http://localhost:8081`
+
 I hope it will be fine.
