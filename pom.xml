@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.dynata</groupId>
-    <artifactId>survay-hw</artifactId>
+    <artifactId>survay-hw-reactive</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>survay-hw-reactive</name>
     <description>survay-hw-reactive</description>

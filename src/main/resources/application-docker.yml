@@ -1,5 +1,5 @@
 spring:
   r2dbc:
-    url: r2dbc:postgresql://db:5432/survey_db
+    url: r2dbc:postgresql://db2:5432/survey_db
     username: survey_user
     password: survey_password

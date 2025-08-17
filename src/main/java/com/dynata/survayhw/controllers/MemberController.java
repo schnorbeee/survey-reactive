@@ -40,8 +40,7 @@ public class MemberController {
     }
 
     @GetMapping(path = "/by-not-participated-survey-and-active", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<MemberDto> getByNotParticipatedInSurveyAndIsActive(
-            @RequestParam("surveyId") Long surveyId) {
+    public Flux<MemberDto> getByNotParticipatedInSurveyAndIsActive(@RequestParam("surveyId") Long surveyId) {
         return memberService.getByNotParticipatedInSurveyAndIsActive(surveyId);
     }
 }

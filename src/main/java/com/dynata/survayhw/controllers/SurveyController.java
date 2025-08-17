@@ -44,8 +44,7 @@ public class SurveyController {
     }
 
     @GetMapping(path = "/by-member-id-completion-points", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<Map<String, Integer>> getSurveyCompletionPointsByMemberId(
-            @RequestParam("memberId") Long memberId) {
+    public Mono<Map<String, Integer>> getSurveyCompletionPointsByMemberId(@RequestParam("memberId") Long memberId) {
         return surveyService.getSurveyCompletionPointsByMemberId(memberId);
     }
 

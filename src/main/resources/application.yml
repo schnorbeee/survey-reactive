@@ -1,6 +1,6 @@
 spring:
   application:
-    name: survay-hw
+    name: survay-hw-reactive
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -19,7 +19,7 @@ spring:
       resolve-lazily: false
       max-file-size: 10MB
       max-request-size: 10MB
-      
+
 logging:
   level:
     root: INFO
