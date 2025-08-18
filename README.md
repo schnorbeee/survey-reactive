@@ -4,8 +4,9 @@
 
 The following guides illustrate how to use some features concretely:
 
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+* [Accessing Data with R2DBC](https://spring.io/guides/gs/accessing-data-r2dbc)
 * [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
+* [Building a RESTful WebFLux](https://www.baeldung.com/spring-webflux)
 * [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
 * [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
 
@@ -41,14 +42,17 @@ In resources folder I put your sended .csv files, and the test cases uses this f
 
     ../src/test/resources/testfiles/*.csv
 
-I create into root postman folder, where you can find a postman collection,
+I create into root folder a postman folder, where you can find a postman collection,
 and you can test with postman application after you imported into Postman app,
-and you change to correcting the POST requests file path with yours.
+but you must to change into Postman: File -> Settings -> General -> Working directory -> Location
+to your absolute path where you checkout-ed your project. For example:
+You cloned the project into /home/user1/repos/survey-hw folder, then you setup Postman Working Directory to this folder.
+Then you can simple import survey.postman_collection.json into your Postman, and you can test easily.
 
     ../survay-hw/postman/survey.postman_collection.json
 
 !!! I had one big issues with the name of .csv files.
-Spring application in POST requests can't handle MultipartFile, if filenames had separator character like 'space'.
+Spring application in POST requests can't handle FilePart, if filenames had separator character like 'space'.
 So if you want to use your files into postman collection, then take care about this information and remove all separator
 character into the filenames.
 
