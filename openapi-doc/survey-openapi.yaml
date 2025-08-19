@@ -1,0 +1,529 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8081
+  description: Generated server url
+paths:
+  /api/surveys:
+    post:
+      tags:
+      - survey-controller
+      summary: Save surveys from csv file
+      operationId: uploadSurveysCsv
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SurveyDto"
+        "400":
+          description: "Runtime error: HttpStatus.BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+        "500":
+          description: "Fatal error: HttpStatus.INTERNAL_SERVER_ERROR"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+  /api/statuses:
+    post:
+      tags:
+      - status-controller
+      summary: Save statuses from csv file.
+      operationId: uploadStatusesCsv
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StatusDto"
+        "400":
+          description: "Runtime error: HttpStatus.BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+        "500":
+          description: "Fatal error: HttpStatus.INTERNAL_SERVER_ERROR"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+  /api/participations:
+    post:
+      tags:
+      - participation-controller
+      summary: Save participations from csv file.
+      operationId: uploadParticipationsCsv
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ParticipationDto"
+        "400":
+          description: "Runtime error: HttpStatus.BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+        "500":
+          description: "Fatal error: HttpStatus.INTERNAL_SERVER_ERROR"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+  /api/members:
+    post:
+      tags:
+      - member-controller
+      summary: Save members from csv file.
+      operationId: uploadMembersCsv
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MemberDto"
+        "400":
+          description: "Runtime error: HttpStatus.BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+        "500":
+          description: "Fatal error: HttpStatus.INTERNAL_SERVER_ERROR"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+  /api/surveys/by-member-id-completion-points:
+    get:
+      tags:
+      - survey-controller
+      summary: Get one member completed surveys point by memberId
+      operationId: getSurveyCompletionPointsByMemberId
+      parameters:
+      - name: memberId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        "400":
+          description: "Runtime error: HttpStatus.BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+        "500":
+          description: "Fatal error: HttpStatus.INTERNAL_SERVER_ERROR"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+  /api/surveys/by-member-id-and-completed:
+    get:
+      tags:
+      - survey-controller
+      summary: "Get survey list by memberId, and status is: Completed"
+      operationId: getByMemberIdAndIsCompleted
+      parameters:
+      - name: memberId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SurveyDto"
+        "400":
+          description: "Runtime error: HttpStatus.BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+        "500":
+          description: "Fatal error: HttpStatus.INTERNAL_SERVER_ERROR"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+  /api/surveys/all-statistic:
+    get:
+      tags:
+      - survey-controller
+      summary: Get survey statistic list
+      operationId: getAllStatisticSurveys
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SurveyStatisticDto"
+        "400":
+          description: "Runtime error: HttpStatus.BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+        "500":
+          description: "Fatal error: HttpStatus.INTERNAL_SERVER_ERROR"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+  /api/members/by-survey-and-completed:
+    get:
+      tags:
+      - member-controller
+      summary: "Get member list by surveyId, and status is: Completed"
+      operationId: getBySurveyIdAndIsCompleted
+      parameters:
+      - name: surveyId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MemberDto"
+        "400":
+          description: "Runtime error: HttpStatus.BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+        "500":
+          description: "Fatal error: HttpStatus.INTERNAL_SERVER_ERROR"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+  /api/members/by-not-participated-survey-and-active:
+    get:
+      tags:
+      - member-controller
+      summary: "Get member list by surveyId, and status is: Rejected or Not asked"
+      operationId: getByNotParticipatedInSurveyAndIsActive
+      parameters:
+      - name: surveyId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MemberDto"
+        "400":
+          description: "Runtime error: HttpStatus.BAD_REQUEST"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+        "500":
+          description: "Fatal error: HttpStatus.INTERNAL_SERVER_ERROR"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExceptionResponse"
+components:
+  schemas:
+    SurveyDto:
+      type: object
+      description: Survey record
+      properties:
+        Survey Id:
+          type: integer
+          format: int64
+          description: surveyId
+          example: 1
+        Name:
+          type: string
+          description: name
+          example: Survey 01
+        Expected completes:
+          type: integer
+          format: int32
+          description: expectedCompletes
+          example: 10
+        Completion points:
+          type: integer
+          format: int32
+          description: completionPoints
+          example: 8
+        Filtered points:
+          type: integer
+          format: int32
+          description: filteredPoints
+          example: 4
+    ExceptionResponse:
+      type: object
+      description: Error response
+      properties:
+        statusCode:
+          type: string
+          description: statusCode
+          enum:
+          - 100 CONTINUE
+          - 101 SWITCHING_PROTOCOLS
+          - 102 PROCESSING
+          - 103 EARLY_HINTS
+          - 103 CHECKPOINT
+          - 200 OK
+          - 201 CREATED
+          - 202 ACCEPTED
+          - 203 NON_AUTHORITATIVE_INFORMATION
+          - 204 NO_CONTENT
+          - 205 RESET_CONTENT
+          - 206 PARTIAL_CONTENT
+          - 207 MULTI_STATUS
+          - 208 ALREADY_REPORTED
+          - 226 IM_USED
+          - 300 MULTIPLE_CHOICES
+          - 301 MOVED_PERMANENTLY
+          - 302 FOUND
+          - 302 MOVED_TEMPORARILY
+          - 303 SEE_OTHER
+          - 304 NOT_MODIFIED
+          - 305 USE_PROXY
+          - 307 TEMPORARY_REDIRECT
+          - 308 PERMANENT_REDIRECT
+          - 400 BAD_REQUEST
+          - 401 UNAUTHORIZED
+          - 402 PAYMENT_REQUIRED
+          - 403 FORBIDDEN
+          - 404 NOT_FOUND
+          - 405 METHOD_NOT_ALLOWED
+          - 406 NOT_ACCEPTABLE
+          - 407 PROXY_AUTHENTICATION_REQUIRED
+          - 408 REQUEST_TIMEOUT
+          - 409 CONFLICT
+          - 410 GONE
+          - 411 LENGTH_REQUIRED
+          - 412 PRECONDITION_FAILED
+          - 413 PAYLOAD_TOO_LARGE
+          - 413 REQUEST_ENTITY_TOO_LARGE
+          - 414 URI_TOO_LONG
+          - 414 REQUEST_URI_TOO_LONG
+          - 415 UNSUPPORTED_MEDIA_TYPE
+          - 416 REQUESTED_RANGE_NOT_SATISFIABLE
+          - 417 EXPECTATION_FAILED
+          - 418 I_AM_A_TEAPOT
+          - 419 INSUFFICIENT_SPACE_ON_RESOURCE
+          - 420 METHOD_FAILURE
+          - 421 DESTINATION_LOCKED
+          - 422 UNPROCESSABLE_ENTITY
+          - 423 LOCKED
+          - 424 FAILED_DEPENDENCY
+          - 425 TOO_EARLY
+          - 426 UPGRADE_REQUIRED
+          - 428 PRECONDITION_REQUIRED
+          - 429 TOO_MANY_REQUESTS
+          - 431 REQUEST_HEADER_FIELDS_TOO_LARGE
+          - 451 UNAVAILABLE_FOR_LEGAL_REASONS
+          - 500 INTERNAL_SERVER_ERROR
+          - 501 NOT_IMPLEMENTED
+          - 502 BAD_GATEWAY
+          - 503 SERVICE_UNAVAILABLE
+          - 504 GATEWAY_TIMEOUT
+          - 505 HTTP_VERSION_NOT_SUPPORTED
+          - 506 VARIANT_ALSO_NEGOTIATES
+          - 507 INSUFFICIENT_STORAGE
+          - 508 LOOP_DETECTED
+          - 509 BANDWIDTH_LIMIT_EXCEEDED
+          - 510 NOT_EXTENDED
+          - 511 NETWORK_AUTHENTICATION_REQUIRED
+          examples:
+          - "400"
+          - "500"
+        message:
+          type: string
+          description: message
+        detail:
+          type: string
+          description: detail
+    StatusDto:
+      type: object
+      description: Status record
+      properties:
+        Status Id:
+          type: integer
+          format: int64
+          description: statusId
+          example: 4
+        Name:
+          type: string
+          description: name
+          example: Completed
+    ParticipationDto:
+      type: object
+      description: Participation record
+      properties:
+        Member Id:
+          type: integer
+          format: int64
+          description: memberId
+          example: 4
+        Survey Id:
+          type: integer
+          format: int64
+          description: surveyId
+          example: 4
+        Status:
+          type: integer
+          format: int64
+          description: statusId
+          example: 4
+        Length:
+          type: integer
+          format: int32
+          description: length
+          example: 14
+    MemberDto:
+      type: object
+      description: Member record
+      properties:
+        Member Id:
+          type: integer
+          format: int64
+          description: memberId
+          example: 1
+        Full name:
+          type: string
+          description: fullName
+          example: Gipsz Jakab
+        E-mail address:
+          type: string
+          description: emailAddress
+          example: gipsz.jakab@mail.hu
+        Is Active:
+          type: boolean
+          description: isActive
+          example: false
+    SurveyStatisticDto:
+      type: object
+      description: Survey Statistic record
+      properties:
+        surveyId:
+          type: integer
+          format: int64
+          description: surveyId
+          example: 1
+        surveyName:
+          type: string
+          description: name
+          example: Survey 01
+        numberOfCompletes:
+          type: integer
+          format: int64
+          description: numberOfCompletes
+          example: 15
+        numberOfFilteredParticipants:
+          type: integer
+          format: int64
+          description: numberOfFilteredParticipants
+          example: 6
+        numberOfRejectedParticipants:
+          type: integer
+          format: int64
+          description: numberOfRejectedParticipants
+          example: 1
+        averageLengthOfTimeSpentOnSurvey:
+          type: number
+          description: averageLengthOfTimeSpentOnSurvey
+          example: 1.5

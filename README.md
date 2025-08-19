@@ -36,7 +36,7 @@ but if you want to run test cases, then you have 2 options:
 
 1. You simple run `mvn clean install` into the root of project. In this case all tests will run after the build.
 2. You can run separate run once by once test files with Intellj. You can find files here:
-   ../src/test/java/com/dynata/survayhw/controllers/*
+   ../src/test/java/com/dynata/surveyhw/controllers/*
 
 In resources folder I put your sended .csv files, and the test cases uses this files as well.
 
@@ -49,7 +49,7 @@ to your absolute path where you checkout-ed your project. For example:
 You cloned the project into /home/user1/repos/survey-hw folder, then you setup Postman Working Directory to this folder.
 Then you can simple import survey.postman_collection.json into your Postman, and you can test easily.
 
-    ../survay-hw/postman/survey.postman_collection.json
+    ../survey-hw/postman/survey.postman_collection.json
 
 !!! I had one big issues with the name of .csv files.
 Spring application in POST requests can't handle FilePart, if filenames had separator character like 'space'.

@@ -10,16 +10,18 @@
     </parent>
 
     <groupId>com.dynata</groupId>
-    <artifactId>survay-hw-reactive</artifactId>
+    <artifactId>survey-hw-reactive</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>survay-hw-reactive</name>
-    <description>survay-hw-reactive</description>
+    <name>survey-hw-reactive</name>
+    <description>survey-hw-reactive</description>
 
     <properties>
         <java.version>17</java.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <com.opencsv.version>5.9</com.opencsv.version>
         <org.testcontainers.version>1.19.3</org.testcontainers.version>
+        <org.springdoc.version>2.8.9</org.springdoc.version>
+        <org.springdoc.maven.version>1.5</org.springdoc.maven.version>
     </properties>
 
     <dependencies>
@@ -119,6 +121,18 @@
             <artifactId>spring-boot-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- OpenApi doc generate -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+            <version>${org.springdoc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.r2dbc</groupId>
+            <artifactId>r2dbc-h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -150,7 +164,49 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <arguments>
+                        <argument>--server.port=8081</argument>
+                        <argument>
+                            --spring.r2dbc.url=r2dbc:h2:mem:///docdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+                        </argument>
+                        <argument>--spring.r2dbc.username=sa</argument>
+                        <argument>--spring.r2dbc.password=</argument>
+                    </arguments>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>pre-integration-test</id>
+                        <goals>
+                            <goal>start</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>post-integration-test</id>
+                        <goals>
+                            <goal>stop</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                <version>${org.springdoc.maven.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate-openapi</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <apiDocsUrl>http://localhost:8081/v3/api-docs.yaml</apiDocsUrl>
+                            <outputDir>${project.basedir}/openapi-doc</outputDir>
+                            <outputFileName>survey-openapi.yaml</outputFileName>
+                            <attachArtifact>false</attachArtifact>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
