@@ -81,7 +81,7 @@ public class ParticipationControllerTest {
                 .when()
                 .post("/api/participations")
                 .then()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.CREATED.value())
                 .body("$", Matchers.hasSize(3000));
 
         assertThat(participationRepository.findAll().collectList().block()).hasSize(3000);

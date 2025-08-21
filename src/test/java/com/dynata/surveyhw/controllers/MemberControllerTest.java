@@ -81,7 +81,7 @@ public class MemberControllerTest {
                 .when()
                 .post("/api/members")
                 .then()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.CREATED.value())
                 .body("$", Matchers.hasSize(300));
 
         assertThat(memberRepository.findAll().collectList().block()).hasSize(300);

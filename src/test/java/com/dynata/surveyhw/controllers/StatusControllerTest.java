@@ -75,7 +75,7 @@ public class StatusControllerTest {
                 .when()
                 .post("/api/statuses")
                 .then()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.CREATED.value())
                 .body("$", Matchers.hasSize(4));
 
         assertThat(statusRepository.findAll().collectList().block()).hasSize(4);

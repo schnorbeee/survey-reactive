@@ -81,7 +81,7 @@ public class SurveyControllerTest {
                 .when()
                 .post("/api/surveys")
                 .then()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.CREATED.value())
                 .body("$", Matchers.hasSize(100));
 
         assertThat(surveyRepository.findAll().collectList().block()).hasSize(100);

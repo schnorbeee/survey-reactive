@@ -11,7 +11,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +39,7 @@ public class MemberController {
 
     @Operation(summary = "Save members from csv file.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK",
+            @ApiResponse(responseCode = "201", description = "CREATED",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             array = @ArraySchema(schema = @Schema(implementation = MemberDto.class)))),
             @ApiResponse(responseCode = "400", description = "Runtime error: HttpStatus.BAD_REQUEST",
@@ -48,9 +50,9 @@ public class MemberController {
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<MemberDto> uploadMembersCsv(@RequestPart("file") FilePart filePart) {
-        return csvService.readFromCsv(filePart, MemberDto.class)
-                .flatMapMany(memberService::saveMemberDtos);
+    public ResponseEntity<Flux<MemberDto>> uploadMembersCsv(@RequestPart("file") FilePart filePart) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(csvService.readFromCsv(filePart, MemberDto.class).flatMapMany(memberService::saveMemberDtos));
     }
 
     @Operation(summary = "Get member list by surveyId, and status is: Completed")
@@ -66,8 +68,8 @@ public class MemberController {
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping(path = "/by-survey-and-completed", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<MemberDto> getBySurveyIdAndIsCompleted(@RequestParam("surveyId") Long surveyId) {
-        return memberService.getBySurveyIdAndIsCompleted(surveyId);
+    public ResponseEntity<Flux<MemberDto>> getBySurveyIdAndIsCompleted(@RequestParam("surveyId") Long surveyId) {
+        return ResponseEntity.ok(memberService.getBySurveyIdAndIsCompleted(surveyId));
     }
 
     @Operation(summary = "Get member list by surveyId, and status is: Rejected or Not asked")
@@ -83,7 +85,8 @@ public class MemberController {
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping(path = "/by-not-participated-survey-and-active", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Flux<MemberDto> getByNotParticipatedInSurveyAndIsActive(@RequestParam("surveyId") Long surveyId) {
-        return memberService.getByNotParticipatedInSurveyAndIsActive(surveyId);
+    public ResponseEntity<Flux<MemberDto>> getByNotParticipatedInSurveyAndIsActive(
+            @RequestParam("surveyId") Long surveyId) {
+        return ResponseEntity.ok(memberService.getByNotParticipatedInSurveyAndIsActive(surveyId));
     }
 }
