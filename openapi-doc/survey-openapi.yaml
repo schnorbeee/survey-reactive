@@ -211,9 +211,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/SurveyDto"
+                $ref: "#/components/schemas/PageSurveyDto"
+              examples:
+                PageSurveyDtoExample:
+                  summary: Paged response with SurveyDto objects
+                  description: PageSurveyDtoExample
+                  externalValue: /openapi/examples/page-survey-example.json
         "400":
           description: "Runtime error: HttpStatus.BAD_REQUEST"
           content:
@@ -238,9 +241,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/SurveyStatisticDto"
+                $ref: "#/components/schemas/PageStatisticDto"
+              examples:
+                PageStatisticDtoExample:
+                  summary: Paged response with SurveyStatisticDto objects
+                  description: PageStatisticDtoExample
+                  externalValue: /openapi/examples/page-statistic-example.json
         "400":
           description: "Runtime error: HttpStatus.BAD_REQUEST"
           content:
@@ -272,9 +278,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/MemberDto"
+                $ref: "#/components/schemas/PageMemberDto"
+              examples:
+                PageMemberDtoExample:
+                  summary: Paged response with MemberDto objects
+                  description: PageMemberDtoExample
+                  externalValue: /openapi/examples/page-member-example.json
         "400":
           description: "Runtime error: HttpStatus.BAD_REQUEST"
           content:
@@ -306,9 +315,12 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/MemberDto"
+                $ref: "#/components/schemas/PageMemberDto"
+              examples:
+                PageMemberDtoExample:
+                  summary: Paged response with MemberDto objects
+                  description: PageMemberDtoExample
+                  externalValue: /openapi/examples/page-member-example.json
         "400":
           description: "Runtime error: HttpStatus.BAD_REQUEST"
           content:
@@ -327,26 +339,26 @@ components:
       type: object
       description: Survey record
       properties:
-        Survey Id:
+        surveyId:
           type: integer
           format: int64
           description: surveyId
           example: 1
-        Name:
+        name:
           type: string
           description: name
           example: Survey 01
-        Expected completes:
+        expectedCompletes:
           type: integer
           format: int32
           description: expectedCompletes
           example: 10
-        Completion points:
+        completionPoints:
           type: integer
           format: int32
           description: completionPoints
           example: 8
-        Filtered points:
+        filteredPoints:
           type: integer
           format: int32
           description: filteredPoints
@@ -441,12 +453,12 @@ components:
       type: object
       description: Status record
       properties:
-        Status Id:
+        statusId:
           type: integer
           format: int64
           description: statusId
           example: 4
-        Name:
+        name:
           type: string
           description: name
           example: Completed
@@ -454,22 +466,22 @@ components:
       type: object
       description: Participation record
       properties:
-        Member Id:
+        memberId:
           type: integer
           format: int64
           description: memberId
           example: 4
-        Survey Id:
+        surveyId:
           type: integer
           format: int64
           description: surveyId
           example: 4
-        Status:
+        statusId:
           type: integer
           format: int64
           description: statusId
           example: 4
-        Length:
+        length:
           type: integer
           format: int32
           description: length
@@ -478,23 +490,81 @@ components:
       type: object
       description: Member record
       properties:
-        Member Id:
+        memberId:
           type: integer
           format: int64
           description: memberId
           example: 1
-        Full name:
+        fullName:
           type: string
           description: fullName
           example: Gipsz Jakab
-        E-mail address:
+        emailAddress:
           type: string
           description: emailAddress
           example: gipsz.jakab@mail.hu
-        Is Active:
+        isActive:
           type: boolean
           description: isActive
           example: false
+    PageSurveyDto:
+      type: object
+      description: Page of SurveyDto
+      properties:
+        content:
+          type: array
+          description: content
+          items:
+            $ref: "#/components/schemas/SurveyDto"
+        pageNumber:
+          type: integer
+          format: int32
+          description: pageNumber
+          example: 1
+        pageSize:
+          type: integer
+          format: int32
+          description: pageSize
+          example: 10
+        totalElements:
+          type: integer
+          format: int64
+          description: totalElements
+          example: 3
+        numberOfElements:
+          type: integer
+          format: int32
+          description: numberOfElements
+          example: 3
+    PageStatisticDto:
+      type: object
+      description: Page of SurveyStatisticDto
+      properties:
+        content:
+          type: array
+          description: content
+          items:
+            $ref: "#/components/schemas/SurveyStatisticDto"
+        pageNumber:
+          type: integer
+          format: int32
+          description: pageNumber
+          example: 1
+        pageSize:
+          type: integer
+          format: int32
+          description: pageSize
+          example: 10
+        totalElements:
+          type: integer
+          format: int64
+          description: totalElements
+          example: 3
+        numberOfElements:
+          type: integer
+          format: int32
+          description: numberOfElements
+          example: 3
     SurveyStatisticDto:
       type: object
       description: Survey Statistic record
@@ -504,7 +574,7 @@ components:
           format: int64
           description: surveyId
           example: 1
-        surveyName:
+        name:
           type: string
           description: name
           example: Survey 01
@@ -527,3 +597,32 @@ components:
           type: number
           description: averageLengthOfTimeSpentOnSurvey
           example: 1.5
+    PageMemberDto:
+      type: object
+      description: Page of MemberDto
+      properties:
+        content:
+          type: array
+          description: content
+          items:
+            $ref: "#/components/schemas/MemberDto"
+        pageNumber:
+          type: integer
+          format: int32
+          description: pageNumber
+          example: 1
+        pageSize:
+          type: integer
+          format: int32
+          description: pageSize
+          example: 10
+        totalElements:
+          type: integer
+          format: int64
+          description: totalElements
+          example: 3
+        numberOfElements:
+          type: integer
+          format: int32
+          description: numberOfElements
+          example: 3

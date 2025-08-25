@@ -1,6 +1,7 @@
 package com.dynata.surveyhw.mappers;
 
 import com.dynata.surveyhw.dtos.SurveyDto;
+import com.dynata.surveyhw.dtos.csv.SurveyCsvDto;
 import com.dynata.surveyhw.entities.Survey;
 import org.mapstruct.Mapper;
 
@@ -9,5 +10,5 @@ public interface SurveyMapper {
 
     SurveyDto toDto(Survey entity);
 
-    Survey toEntity(SurveyDto dto);
+    Survey toEntity(SurveyCsvDto dto);
 }

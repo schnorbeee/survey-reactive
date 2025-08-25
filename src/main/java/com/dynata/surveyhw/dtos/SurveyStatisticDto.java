@@ -19,7 +19,7 @@ public class SurveyStatisticDto {
     private Long surveyId;
 
     @Schema(description = "name", example = "Survey 01")
-    private String surveyName;
+    private String name;
 
     @Schema(description = "numberOfCompletes", example = "15")
     private Long numberOfCompletes;

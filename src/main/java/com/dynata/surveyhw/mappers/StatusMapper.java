@@ -1,6 +1,7 @@
 package com.dynata.surveyhw.mappers;
 
 import com.dynata.surveyhw.dtos.StatusDto;
+import com.dynata.surveyhw.dtos.csv.StatusCsvDto;
 import com.dynata.surveyhw.entities.Status;
 import org.mapstruct.Mapper;
 
@@ -9,5 +10,5 @@ public interface StatusMapper {
 
     StatusDto toDto(Status entity);
 
-    Status toEntity(StatusDto dto);
+    Status toEntity(StatusCsvDto dto);
 }

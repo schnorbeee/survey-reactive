@@ -1,12 +1,15 @@
 package com.dynata.surveyhw.controllers;
 
 import com.dynata.surveyhw.dtos.MemberDto;
+import com.dynata.surveyhw.dtos.csv.MemberCsvDto;
+import com.dynata.surveyhw.dtos.openapi.PageMemberDto;
 import com.dynata.surveyhw.handlers.responses.ExceptionResponse;
 import com.dynata.surveyhw.services.CsvService;
 import com.dynata.surveyhw.services.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -52,14 +55,18 @@ public class MemberController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Flux<MemberDto>> uploadMembersCsv(@RequestPart("file") FilePart filePart) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(csvService.readFromCsv(filePart, MemberDto.class).flatMapMany(memberService::saveMemberDtos));
+                .body(csvService.readFromCsv(filePart, MemberCsvDto.class).flatMapMany(memberService::saveMemberDtos));
     }
 
     @Operation(summary = "Get member list by surveyId, and status is: Completed")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            array = @ArraySchema(schema = @Schema(implementation = MemberDto.class)))),
+                            schema = @Schema(implementation = PageMemberDto.class),
+                            examples = @ExampleObject(name = "PageMemberDtoExample",
+                                    summary = "Paged response with MemberDto objects",
+                                    externalValue = "/openapi/examples/page-member-example.json"
+                            ))),
             @ApiResponse(responseCode = "400", description = "Runtime error: HttpStatus.BAD_REQUEST",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ExceptionResponse.class))),
@@ -76,7 +83,11 @@ public class MemberController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            array = @ArraySchema(schema = @Schema(implementation = MemberDto.class)))),
+                            schema = @Schema(implementation = PageMemberDto.class),
+                            examples = @ExampleObject(name = "PageMemberDtoExample",
+                                    summary = "Paged response with MemberDto objects",
+                                    externalValue = "/openapi/examples/page-member-example.json"
+                            ))),
             @ApiResponse(responseCode = "400", description = "Runtime error: HttpStatus.BAD_REQUEST",
                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = ExceptionResponse.class))),

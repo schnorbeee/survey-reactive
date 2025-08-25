@@ -97,11 +97,11 @@ public class SurveyControllerTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("$", Matchers.hasSize(9))
-                .body("[0].'Survey Id'", Matchers.equalTo(1))
-                .body("[0].Name", Matchers.equalTo("Survey 01"))
-                .body("[0].'Expected completes'", Matchers.equalTo(30))
-                .body("[0].'Completion points'", Matchers.equalTo(5))
-                .body("[0].'Filtered points'", Matchers.equalTo(2));
+                .body("[0].surveyId", Matchers.equalTo(1))
+                .body("[0].name", Matchers.equalTo("Survey 01"))
+                .body("[0].expectedCompletes", Matchers.equalTo(30))
+                .body("[0].completionPoints", Matchers.equalTo(5))
+                .body("[0].filteredPoints", Matchers.equalTo(2));
     }
 
     @Test
@@ -138,7 +138,7 @@ public class SurveyControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body("$", Matchers.hasSize(100))
                 .body("[1].surveyId", Matchers.equalTo(2))
-                .body("[1].surveyName", Matchers.equalTo("Survey 02"))
+                .body("[1].name", Matchers.equalTo("Survey 02"))
                 .body("[1].numberOfCompletes", Matchers.equalTo(14))
                 .body("[1].numberOfFilteredParticipants", Matchers.equalTo(7))
                 .body("[1].numberOfRejectedParticipants", Matchers.equalTo(3))

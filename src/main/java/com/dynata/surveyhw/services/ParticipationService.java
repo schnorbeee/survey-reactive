@@ -1,6 +1,7 @@
 package com.dynata.surveyhw.services;
 
 import com.dynata.surveyhw.dtos.ParticipationDto;
+import com.dynata.surveyhw.dtos.csv.ParticipationCsvDto;
 import com.dynata.surveyhw.mappers.ParticipationMapper;
 import com.dynata.surveyhw.repositories.ParticipationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class ParticipationService {
         this.participationMapper = participationMapper;
     }
 
-    public Flux<ParticipationDto> saveParticipationDtos(List<ParticipationDto> participationDtos) {
+    public Flux<ParticipationDto> saveParticipationDtos(List<ParticipationCsvDto> participationDtos) {
         return Flux.fromIterable(participationDtos)
                 .map(participationMapper::toEntity)
                 .flatMap(participationRepository::upsertParticipation)

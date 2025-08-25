@@ -2,6 +2,7 @@ package com.dynata.surveyhw.services;
 
 import com.dynata.surveyhw.dtos.SurveyDto;
 import com.dynata.surveyhw.dtos.SurveyStatisticDto;
+import com.dynata.surveyhw.dtos.csv.SurveyCsvDto;
 import com.dynata.surveyhw.entities.Survey;
 import com.dynata.surveyhw.mappers.SurveyMapper;
 import com.dynata.surveyhw.repositories.ParticipationRepository;
@@ -41,9 +42,9 @@ public class SurveyService {
         this.surveyMapper = surveyMapper;
     }
 
-    public Flux<SurveyDto> saveSurveyDtos(List<SurveyDto> surveyDtos) {
+    public Flux<SurveyDto> saveSurveyDtos(List<SurveyCsvDto> surveyDtos) {
         List<Long> ids = surveyDtos.stream()
-                .map(SurveyDto::getSurveyId)
+                .map(SurveyCsvDto::getSurveyId)
                 .toList();
 
         return Flux.fromIterable(surveyDtos)
@@ -84,7 +85,7 @@ public class SurveyService {
                             .sort(Comparator.comparingLong(Map.Entry::getKey))
                             .map(survey -> SurveyStatisticDto.builder()
                                     .surveyId(survey.getKey())
-                                    .surveyName(survey.getValue())
+                                    .name(survey.getValue())
                                     .numberOfCompletes(completedMemberCount.getOrDefault(survey.getKey(), 0L))
                                     .numberOfFilteredParticipants(filteredMemberCount.getOrDefault(survey.getKey(), 0L))
                                     .numberOfRejectedParticipants(rejectedMemberCount.getOrDefault(survey.getKey(), 0L))

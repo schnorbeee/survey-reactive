@@ -1,6 +1,7 @@
 package com.dynata.surveyhw.controllers;
 
 import com.dynata.surveyhw.dtos.ParticipationDto;
+import com.dynata.surveyhw.dtos.csv.ParticipationCsvDto;
 import com.dynata.surveyhw.handlers.responses.ExceptionResponse;
 import com.dynata.surveyhw.services.CsvService;
 import com.dynata.surveyhw.services.ParticipationService;
@@ -49,7 +50,8 @@ public class ParticipationController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Flux<ParticipationDto>> uploadParticipationsCsv(@RequestPart("file") FilePart filePart) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(csvService.readFromCsv(filePart, ParticipationDto.class)
-                .flatMapMany(participationService::saveParticipationDtos));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(csvService.readFromCsv(filePart, ParticipationCsvDto.class)
+                        .flatMapMany(participationService::saveParticipationDtos));
     }
 }

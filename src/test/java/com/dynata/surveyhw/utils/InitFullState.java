@@ -1,9 +1,9 @@
 package com.dynata.surveyhw.utils;
 
-import com.dynata.surveyhw.dtos.MemberDto;
-import com.dynata.surveyhw.dtos.ParticipationDto;
-import com.dynata.surveyhw.dtos.StatusDto;
-import com.dynata.surveyhw.dtos.SurveyDto;
+import com.dynata.surveyhw.dtos.csv.MemberCsvDto;
+import com.dynata.surveyhw.dtos.csv.ParticipationCsvDto;
+import com.dynata.surveyhw.dtos.csv.StatusCsvDto;
+import com.dynata.surveyhw.dtos.csv.SurveyCsvDto;
 import com.dynata.surveyhw.mappers.MemberMapper;
 import com.dynata.surveyhw.mappers.ParticipationMapper;
 import com.dynata.surveyhw.mappers.StatusMapper;
@@ -59,24 +59,24 @@ public class InitFullState {
     }
 
     public void initAllCsv(boolean exceptParticipation) {
-        Flux.fromIterable(readFromCsv(new File("src/test/resources/testfiles/Statuses.csv"), StatusDto.class))
+        Flux.fromIterable(readFromCsv(new File("src/test/resources/testfiles/Statuses.csv"), StatusCsvDto.class))
                 .map(statusMapper::toEntity)
                 .flatMap(statusRepository::upsertStatus)
                 .then().block();
 
-        Flux.fromIterable(readFromCsv(new File("src/test/resources/testfiles/Members.csv"), MemberDto.class))
+        Flux.fromIterable(readFromCsv(new File("src/test/resources/testfiles/Members.csv"), MemberCsvDto.class))
                 .map(memberMapper::toEntity)
                 .flatMap(memberRepository::upsertMember)
                 .then().block();
 
-        Flux.fromIterable(readFromCsv(new File("src/test/resources/testfiles/Surveys.csv"), SurveyDto.class))
+        Flux.fromIterable(readFromCsv(new File("src/test/resources/testfiles/Surveys.csv"), SurveyCsvDto.class))
                 .map(surveyMapper::toEntity)
                 .flatMap(surveyRepository::upsertSurvey)
                 .then().block();
 
         if (!exceptParticipation) {
             Flux.fromIterable(readFromCsv(new File("src/test/resources/testfiles/Participations.csv"),
-                            ParticipationDto.class))
+                            ParticipationCsvDto.class))
                     .map(participationMapper::toEntity)
                     .flatMap(participationRepository::upsertParticipation)
                     .then().block();

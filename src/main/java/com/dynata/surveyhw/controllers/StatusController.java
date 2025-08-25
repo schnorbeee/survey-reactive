@@ -1,6 +1,7 @@
 package com.dynata.surveyhw.controllers;
 
 import com.dynata.surveyhw.dtos.StatusDto;
+import com.dynata.surveyhw.dtos.csv.StatusCsvDto;
 import com.dynata.surveyhw.handlers.responses.ExceptionResponse;
 import com.dynata.surveyhw.services.CsvService;
 import com.dynata.surveyhw.services.StatusService;
@@ -49,7 +50,7 @@ public class StatusController {
     })
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Flux<StatusDto>> uploadStatusesCsv(@RequestPart("file") FilePart filePart) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(csvService.readFromCsv(filePart, StatusDto.class)
+        return ResponseEntity.status(HttpStatus.CREATED).body(csvService.readFromCsv(filePart, StatusCsvDto.class)
                 .flatMapMany(statusService::saveStatusDtos));
     }
 }

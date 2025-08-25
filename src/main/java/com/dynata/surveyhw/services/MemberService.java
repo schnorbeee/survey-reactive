@@ -1,6 +1,7 @@
 package com.dynata.surveyhw.services;
 
 import com.dynata.surveyhw.dtos.MemberDto;
+import com.dynata.surveyhw.dtos.csv.MemberCsvDto;
 import com.dynata.surveyhw.mappers.MemberMapper;
 import com.dynata.surveyhw.repositories.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,9 @@ public class MemberService {
         this.memberMapper = memberMapper;
     }
 
-    public Flux<MemberDto> saveMemberDtos(List<MemberDto> memberDtos) {
+    public Flux<MemberDto> saveMemberDtos(List<MemberCsvDto> memberDtos) {
         List<Long> ids = memberDtos.stream()
-                .map(MemberDto::getMemberId)
+                .map(MemberCsvDto::getMemberId)
                 .toList();
 
         return Flux.fromIterable(memberDtos)
