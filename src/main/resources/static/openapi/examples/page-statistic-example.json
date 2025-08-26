@@ -1,0 +1,88 @@
+{
+  "content": [
+    {
+      "surveyId": 89,
+      "name": "Survey 89",
+      "numberOfCompletes": 26,
+      "numberOfFilteredParticipants": 6,
+      "numberOfRejectedParticipants": 4,
+      "averageLengthOfTimeSpentOnSurvey": 16.46153846153846
+    },
+    {
+      "surveyId": 88,
+      "name": "Survey 88",
+      "numberOfCompletes": 23,
+      "numberOfFilteredParticipants": 2,
+      "numberOfRejectedParticipants": 1,
+      "averageLengthOfTimeSpentOnSurvey": 14.130434782608695
+    },
+    {
+      "surveyId": 87,
+      "name": "Survey 87",
+      "numberOfCompletes": 21,
+      "numberOfFilteredParticipants": 14,
+      "numberOfRejectedParticipants": 3,
+      "averageLengthOfTimeSpentOnSurvey": 13.80952380952381
+    },
+    {
+      "surveyId": 86,
+      "name": "Survey 86",
+      "numberOfCompletes": 20,
+      "numberOfFilteredParticipants": 9,
+      "numberOfRejectedParticipants": 5,
+      "averageLengthOfTimeSpentOnSurvey": 16.75
+    },
+    {
+      "surveyId": 85,
+      "name": "Survey 85",
+      "numberOfCompletes": 24,
+      "numberOfFilteredParticipants": 6,
+      "numberOfRejectedParticipants": 2,
+      "averageLengthOfTimeSpentOnSurvey": 14.791666666666666
+    },
+    {
+      "surveyId": 84,
+      "name": "Survey 84",
+      "numberOfCompletes": 25,
+      "numberOfFilteredParticipants": 6,
+      "numberOfRejectedParticipants": 4,
+      "averageLengthOfTimeSpentOnSurvey": 17.0
+    },
+    {
+      "surveyId": 83,
+      "name": "Survey 83",
+      "numberOfCompletes": 18,
+      "numberOfFilteredParticipants": 9,
+      "numberOfRejectedParticipants": 1,
+      "averageLengthOfTimeSpentOnSurvey": 15.944444444444445
+    },
+    {
+      "surveyId": 82,
+      "name": "Survey 82",
+      "numberOfCompletes": 17,
+      "numberOfFilteredParticipants": 7,
+      "numberOfRejectedParticipants": 3,
+      "averageLengthOfTimeSpentOnSurvey": 17.294117647058822
+    },
+    {
+      "surveyId": 81,
+      "name": "Survey 81",
+      "numberOfCompletes": 20,
+      "numberOfFilteredParticipants": 7,
+      "numberOfRejectedParticipants": 3,
+      "averageLengthOfTimeSpentOnSurvey": 15.55
+    },
+    {
+      "surveyId": 80,
+      "name": "Survey 80",
+      "numberOfCompletes": 17,
+      "numberOfFilteredParticipants": 4,
+      "numberOfRejectedParticipants": 5,
+      "averageLengthOfTimeSpentOnSurvey": 14.294117647058824
+    }
+  ],
+  "pageNumber": 2,
+  "pageSize": 10,
+  "totalElements": 100,
+  "numberOfElements": 10
+}

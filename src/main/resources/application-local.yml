@@ -3,3 +3,5 @@ spring:
     url: r2dbc:postgresql://localhost:5431/survey_db
     username: survey_user
     password: survey_password
+server:
+  port: 8081

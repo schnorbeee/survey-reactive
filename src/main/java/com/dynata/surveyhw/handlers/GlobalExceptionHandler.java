@@ -1,18 +1,21 @@
 package com.dynata.surveyhw.handlers;
 
 import com.dynata.surveyhw.handlers.responses.ExceptionResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     public Mono<ResponseEntity<ExceptionResponse>> handleException(Exception e) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        log.error(e.getMessage(), e);
         return Mono.just(ResponseEntity.status(status)
                 .body(build(status, e)));
     }
@@ -20,6 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = RuntimeException.class)
     public Mono<ResponseEntity<ExceptionResponse>> handleRuntimeException(RuntimeException e) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+        log.error(e.getMessage(), e);
         return Mono.just(ResponseEntity.status(status)
                 .body(build(status, e)));
     }

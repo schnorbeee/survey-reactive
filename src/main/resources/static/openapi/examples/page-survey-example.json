@@ -1,0 +1,71 @@
+{
+  "content": [
+    {
+      "surveyId": 1,
+      "name": "Survey 01",
+      "expectedCompletes": 30,
+      "completionPoints": 5,
+      "filteredPoints": 2
+    },
+    {
+      "surveyId": 18,
+      "name": "Survey 18",
+      "expectedCompletes": 60,
+      "completionPoints": 25,
+      "filteredPoints": 4
+    },
+    {
+      "surveyId": 30,
+      "name": "Survey 30",
+      "expectedCompletes": 70,
+      "completionPoints": 25,
+      "filteredPoints": 2
+    },
+    {
+      "surveyId": 44,
+      "name": "Survey 44",
+      "expectedCompletes": 10,
+      "completionPoints": 35,
+      "filteredPoints": 5
+    },
+    {
+      "surveyId": 51,
+      "name": "Survey 51",
+      "expectedCompletes": 40,
+      "completionPoints": 15,
+      "filteredPoints": 2
+    },
+    {
+      "surveyId": 60,
+      "name": "Survey 60",
+      "expectedCompletes": 60,
+      "completionPoints": 35,
+      "filteredPoints": 2
+    },
+    {
+      "surveyId": 82,
+      "name": "Survey 82",
+      "expectedCompletes": 40,
+      "completionPoints": 35,
+      "filteredPoints": 4
+    },
+    {
+      "surveyId": 85,
+      "name": "Survey 85",
+      "expectedCompletes": 100,
+      "completionPoints": 25,
+      "filteredPoints": 2
+    },
+    {
+      "surveyId": 97,
+      "name": "Survey 97",
+      "expectedCompletes": 10,
+      "completionPoints": 35,
+      "filteredPoints": 1
+    }
+  ],
+  "pageNumber": 1,
+  "pageSize": 20,
+  "totalElements": 9,
+  "numberOfElements": 9
+}

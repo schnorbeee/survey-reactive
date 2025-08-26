@@ -1,5 +1,6 @@
 package com.dynata.surveyhw.controllers;
 
+import com.dynata.surveyhw.dtos.PageDto;
 import com.dynata.surveyhw.dtos.SurveyDto;
 import com.dynata.surveyhw.dtos.SurveyStatisticDto;
 import com.dynata.surveyhw.dtos.csv.SurveyCsvDto;
@@ -15,7 +16,10 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -80,8 +84,9 @@ public class SurveyController {
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping(path = "/by-member-id-and-completed", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Flux<SurveyDto>> getByMemberIdAndIsCompleted(@RequestParam("memberId") Long memberId) {
-        return ResponseEntity.ok(surveyService.getByMemberIdAndIsCompleted(memberId));
+    public ResponseEntity<Mono<PageDto<SurveyDto>>> getByMemberIdAndIsCompleted(@RequestParam("memberId") Long memberId,
+            @ParameterObject @PageableDefault(size = 20, sort = "surveyId") Pageable pageable) {
+        return ResponseEntity.ok(surveyService.getByMemberIdAndIsCompleted(memberId, pageable));
     }
 
     @Operation(summary = "Get one member completed surveys point by memberId")
@@ -119,7 +124,8 @@ public class SurveyController {
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping(path = "/all-statistic", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Flux<SurveyStatisticDto>> getAllStatisticSurveys() {
-        return ResponseEntity.ok(surveyService.getAllStatisticSurveys());
+    public ResponseEntity<Mono<PageDto<SurveyStatisticDto>>> getAllStatisticSurveys(
+            @ParameterObject @PageableDefault(size = 20, sort = "surveyId") Pageable pageable) {
+        return ResponseEntity.ok(surveyService.getAllStatisticSurveys(pageable));
     }
 }

@@ -1,7 +1,6 @@
 package com.dynata.surveyhw.repositories;
 
 import com.dynata.surveyhw.entities.Survey;
-import com.dynata.surveyhw.repositories.returns.SurveyStatisticName;
 import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,11 +11,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface SurveyRepository extends ReactiveCrudRepository<Survey, Long> {
+public interface SurveyRepository extends ReactiveCrudRepository<Survey, Long>, SurveyCustomRepository {
 
     @Modifying
     @Transactional
-    @Query(value = """
+    @Query("""
             INSERT INTO survey (survey_id, name, expected_completes, completion_points, filtered_points)
             VALUES (:#{#s.surveyId}, :#{#s.name}, :#{#s.expectedCompletes}, :#{#s.completionPoints}, :#{#s.filteredPoints})
             ON CONFLICT (survey_id)
@@ -27,16 +26,25 @@ public interface SurveyRepository extends ReactiveCrudRepository<Survey, Long> {
             """)
     Mono<Void> upsertSurvey(Survey s);
 
-    @Query("SELECT s.* FROM survey s JOIN participation p ON s.survey_id = p.survey_id "
-            + "WHERE p.member_id = :memberId AND p.status_id = 4 ORDER BY s.survey_id")
-    Flux<Survey> findByMemberIdAndIsCompleted(@Param("memberId") Long memberId);
+    @Query("""
+            SELECT COUNT(s.survey_id) 
+            FROM survey AS s JOIN participation AS p ON s.survey_id = p.survey_id
+            WHERE p.member_id = :memberId AND p.status_id = 4
+            """)
+    Mono<Long> totalElementCountByMemberIdAndIsCompleted(@Param("memberId") Long memberId);
 
-    @Query("SELECT s.* FROM survey s JOIN participation p ON s.survey_id = p.survey_id "
-            + "WHERE p.member_id = :memberId ORDER BY s.survey_id")
+    @Query("""
+            SELECT s.* 
+            FROM survey AS s 
+                JOIN participation AS p ON s.survey_id = p.survey_id 
+            WHERE p.member_id = :memberId 
+            ORDER BY s.survey_id
+            """)
     Flux<Survey> findCompletionPointsByMemberId(@Param("memberId") Long memberId);
 
-    @Query(value = """
-            SELECT s.survey_id AS survey_id, s.name AS survey_name FROM survey s
+    @Query("""
+            SELECT COUNT(s.survey_id) 
+            FROM survey AS s
             """)
-    Flux<SurveyStatisticName> findAllSurveyIdsWithNames();
+    Mono<Long> totalElementCount();
 }

@@ -13,7 +13,7 @@ public interface StatusRepository extends ReactiveCrudRepository<Status, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = """
+    @Query("""
             INSERT INTO status (status_id, name)
             VALUES (:#{#s.statusId}, :#{#s.name})
             ON CONFLICT (status_id)

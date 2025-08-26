@@ -8,9 +8,9 @@ CREATE TABLE IF NOT EXISTS member (
 CREATE TABLE IF NOT EXISTS survey (
     survey_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    expected_completes VARCHAR(255) NOT NULL,
-    completion_points VARCHAR(255) NOT NULL,
-    filtered_points VARCHAR(255) NOT NULL
+    expected_completes INT NOT NULL,
+    completion_points INT NOT NULL,
+    filtered_points INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS status (

@@ -96,12 +96,12 @@ public class SurveyControllerTest {
                 .get("/api/surveys/by-member-id-and-completed?memberId=2")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("$", Matchers.hasSize(9))
-                .body("[0].surveyId", Matchers.equalTo(1))
-                .body("[0].name", Matchers.equalTo("Survey 01"))
-                .body("[0].expectedCompletes", Matchers.equalTo(30))
-                .body("[0].completionPoints", Matchers.equalTo(5))
-                .body("[0].filteredPoints", Matchers.equalTo(2));
+                .body("content", Matchers.hasSize(9))
+                .body("content[0].surveyId", Matchers.equalTo(1))
+                .body("content[0].name", Matchers.equalTo("Survey 01"))
+                .body("content[0].expectedCompletes", Matchers.equalTo(30))
+                .body("content[0].completionPoints", Matchers.equalTo(5))
+                .body("content[0].filteredPoints", Matchers.equalTo(2));
     }
 
     @Test
@@ -133,15 +133,15 @@ public class SurveyControllerTest {
         initFullState.initAllCsv(false);
 
         RestAssured.when()
-                .get("/api/surveys/all-statistic")
+                .get("/api/surveys/all-statistic?page=1&sort=name")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("$", Matchers.hasSize(100))
-                .body("[1].surveyId", Matchers.equalTo(2))
-                .body("[1].name", Matchers.equalTo("Survey 02"))
-                .body("[1].numberOfCompletes", Matchers.equalTo(14))
-                .body("[1].numberOfFilteredParticipants", Matchers.equalTo(7))
-                .body("[1].numberOfRejectedParticipants", Matchers.equalTo(3))
-                .body("[1].averageLengthOfTimeSpentOnSurvey", Matchers.equalTo(15.214286F));
+                .body("content", Matchers.hasSize(20))
+                .body("content[1].surveyId", Matchers.equalTo(2))
+                .body("content[1].name", Matchers.equalTo("Survey 02"))
+                .body("content[1].numberOfCompletes", Matchers.equalTo(14))
+                .body("content[1].numberOfFilteredParticipants", Matchers.equalTo(7))
+                .body("content[1].numberOfRejectedParticipants", Matchers.equalTo(3))
+                .body("content[1].averageLengthOfTimeSpentOnSurvey", Matchers.equalTo(15.214286F));
     }
 }

@@ -7,15 +7,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface MemberRepository extends ReactiveCrudRepository<Member, Long> {
+public interface MemberRepository extends ReactiveCrudRepository<Member, Long>, MemberCustomRepository {
 
     @Modifying
     @Transactional
-    @Query(value = """
+    @Query("""
             INSERT INTO member (member_id, full_name, email_address, is_active)
             VALUES (:#{#m.memberId}, :#{#m.fullName}, :#{#m.emailAddress}, :#{#m.isActive})
             ON CONFLICT (member_id)
@@ -25,12 +24,17 @@ public interface MemberRepository extends ReactiveCrudRepository<Member, Long> {
             """)
     Mono<Void> upsertMember(Member m);
 
-    @Query("SELECT m.* FROM member m JOIN participation p ON m.member_id = p.member_id "
-            + " WHERE p.survey_id = :surveyId AND p.status_id = 4 ORDER BY m.member_id")
-    Flux<Member> findBySurveyIdAndIsCompleted(@Param("surveyId") Long surveyId);
+    @Query("""
+            SELECT COUNT(m.member_id) 
+            FROM member AS m JOIN participation AS p ON m.member_id = p.member_id
+            WHERE p.survey_id = :surveyId AND p.status_id = 4
+            """)
+    Mono<Long> totalElementCountBySurveyIdAndIsCompleted(@Param("surveyId") Long surveyId);
 
-    @Query("SELECT m.* FROM member m JOIN participation p ON m.member_id = p.member_id "
-            + "WHERE p.survey_id = :surveyId AND (p.status_id = 1 OR p.status_id = 2) "
-            + "AND m.is_active = true ORDER BY m.member_id")
-    Flux<Member> findByNotParticipatedSurveyAndIsActive(@Param("surveyId") Long surveyId);
+    @Query("""
+            SELECT COUNT(m.member_id) 
+            FROM member AS m JOIN participation AS p ON m.member_id = p.member_id
+            WHERE p.survey_id = :surveyId AND m.is_active = true AND p.status_id IN (1,2)
+            """)
+    Mono<Long> totalElementCountByNotParticipatedSurveyAndIsActive(@Param("surveyId") Long surveyId);
 }

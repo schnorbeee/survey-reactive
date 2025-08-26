@@ -1,6 +1,7 @@
 package com.dynata.surveyhw.controllers;
 
 import com.dynata.surveyhw.dtos.MemberDto;
+import com.dynata.surveyhw.dtos.PageDto;
 import com.dynata.surveyhw.dtos.csv.MemberCsvDto;
 import com.dynata.surveyhw.dtos.openapi.PageMemberDto;
 import com.dynata.surveyhw.handlers.responses.ExceptionResponse;
@@ -13,7 +14,10 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/members")
@@ -75,8 +80,9 @@ public class MemberController {
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping(path = "/by-survey-and-completed", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Flux<MemberDto>> getBySurveyIdAndIsCompleted(@RequestParam("surveyId") Long surveyId) {
-        return ResponseEntity.ok(memberService.getBySurveyIdAndIsCompleted(surveyId));
+    public ResponseEntity<Mono<PageDto<MemberDto>>> getBySurveyIdAndIsCompleted(@RequestParam("surveyId") Long surveyId,
+            @ParameterObject @PageableDefault(size = 20, sort = "memberId") Pageable pageable) {
+        return ResponseEntity.ok(memberService.getBySurveyIdAndIsCompleted(surveyId, pageable));
     }
 
     @Operation(summary = "Get member list by surveyId, and status is: Rejected or Not asked")
@@ -96,8 +102,9 @@ public class MemberController {
                             schema = @Schema(implementation = ExceptionResponse.class)))
     })
     @GetMapping(path = "/by-not-participated-survey-and-active", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Flux<MemberDto>> getByNotParticipatedInSurveyAndIsActive(
-            @RequestParam("surveyId") Long surveyId) {
-        return ResponseEntity.ok(memberService.getByNotParticipatedInSurveyAndIsActive(surveyId));
+    public ResponseEntity<Mono<PageDto<MemberDto>>> getByNotParticipatedInSurveyAndIsActive(
+            @RequestParam("surveyId") Long surveyId,
+            @ParameterObject @PageableDefault(size = 20, sort = "memberId") Pageable pageable) {
+        return ResponseEntity.ok(memberService.getByNotParticipatedInSurveyAndIsActive(surveyId, pageable));
     }
 }
