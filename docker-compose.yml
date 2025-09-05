@@ -43,6 +43,15 @@ services:
       - "8081:8080"
     command: [ "java", "-jar", "/app.jar" ]
 
+#  frontend2:
+#    build:
+#      context: ../surveys-frontend
+#      dockerfile: Dockerfile
+#    ports:
+#      - "3001:80"
+#    depends_on:
+#      - backend2
+
 volumes:
   postgres_data_async:
   pgadmin_data_async:
